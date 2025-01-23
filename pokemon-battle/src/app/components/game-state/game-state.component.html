@@ -1,0 +1,8 @@
+<div class="game-state">
+    <h2>Estado da Batalha</h2>
+    <div *ngFor="battleState">
+        <p><strong>Jogador 1:</strong> {{ battleState.player1 }} - HP: {{ battleState.pokemon1.hp }}</p>
+        <p><strong>Jogador 2:</strong> {{ battleState.player2 }} - HP: {{ battleState.pokemon2.hp }}</p>
+    </div>
+    <button (click)="fetchBattleState()">Atualizar</button>
+</div>
