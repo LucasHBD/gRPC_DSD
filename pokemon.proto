@@ -1,9 +1,11 @@
 syntax = "proto3";
 
+package pokemon;
+
 service PokemonBattle {
     rpc ChoosePokemon (ChoosePokemonRequest) returns (ChoosePokemonResponse);
     rpc Attack (AttackRequest) returns (AttackResponse);
-    rpx GetBattleState (BattleStateRequest) returns (BattleStateResponse);
+    rpc GetBattleState (BattleStateRequest) returns (BattleStateResponse);
 }
 
 message ChoosePokemonRequest {
