@@ -5,7 +5,7 @@ import pokemon_pb2
 import pokemon_pb2_grpc
 
 
-class PokemonBattleService(pokemon_pb2_grpc.PokemonBattleService):
+class PokemonBattleService(pokemon_pb2_grpc.PokemonBattleServicer):
     def __init__(self):
         self.battles = {}
 
@@ -26,15 +26,16 @@ class PokemonBattleService(pokemon_pb2_grpc.PokemonBattleService):
         )
 
     def Attack(self, request, context):
+        # Verificar se o jogador existe na batalha
         attacker = self.battles.get(request.player_id)
         if not attacker:
-            return pokemon_pb2.AttackResponse(status="Error", message="Jogador não encontrado!")
+            return pokemon_pb2.AttackResponse(status="Error", move="Jogador não encontrado!")
 
         # Identificar o oponente
         opponent_id = [id for id in self.battles if id != request.player_id]
         if not opponent_id:
-            return pokemon_pb2.AttackResponse(status="Error", message="Nenhum oponente encontrado!")
-        
+            return pokemon_pb2.AttackResponse(status="Error", move="Nenhum oponente encontrado!")
+
         opponent = self.battles[opponent_id[0]]
 
         # Calcular dano e reduzir HP do oponente
@@ -43,10 +44,12 @@ class PokemonBattleService(pokemon_pb2_grpc.PokemonBattleService):
         if opponent["pokemon"]["hp"] < 0:
             opponent["pokemon"]["hp"] = 0
 
+        # Retornar a resposta com o dano aplicado
         return pokemon_pb2.AttackResponse(
             status="Success",
-            message=f"{attacker['pokemon']['name']} usou {request.move}! Causou {damage} de dano!"
+            move=f"{request.move} causou {damage} de dano!"  # A resposta com o ataque
         )
+
 
     def GetBattleState(self, request, context):
         players = list(self.battles.keys())
